@@ -12,6 +12,12 @@ Ext.define('AM.proxy.AerialProxy', {
 
     batchActions: false,
 
+    constructor: function() {
+
+        this.callParent(arguments);
+
+    },
+
     buildUrl: function(request)
     {
         switch (request.action)
@@ -29,7 +35,7 @@ Ext.define('AM.proxy.AerialProxy', {
                             data.push(this.parameters[x]);
                     }
 
-                    request.params.data = Ext.JSON.encode(data);
+                    request.params.data = Ext.AerialJSON.encode(data);
                 }
 
                 request.url = this.requestURL + "/" + this.service + "/" + this.method;
@@ -37,33 +43,5 @@ Ext.define('AM.proxy.AerialProxy', {
         }
 
         return this.callParent(arguments);
-    },
-
-    callback: function(data)
-    {
-        console.log("From proxy: " + data);
-    },
-
-    encodeParameters: function(params)
-    {
-        var parameters = {};
-
-        if (params)
-        {
-            if (Ext.typeOf(this.parameters) === 'array')
-            {
-                parameters = [];
-                for (var x = 0; x < params.length; x++)
-                {
-                    parameters.push(this.encodeParameters(params[x]));
-                }
-            }
-            else
-                parameters = params;
-        }
-        else
-            parameters = (params === undefined) ? undefined : null;
-
-        return parameters;
     }
 });

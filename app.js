@@ -1,6 +1,6 @@
 Ext.application({
     name: 'AM',
-    requires: ["AM.proxy.AerialProxy", "AM.aerial.services.UserService"],
+    requires: ["AM.aerial.services.UserService"],
 
     appFolder: 'app',
 
@@ -22,21 +22,25 @@ Ext.application({
             ]
         });
 
-        var service = new Ext.create("UserService");
+//        var service = new Ext.create("UserService");
 //        service.getUsersLike({firstName:"Danny", lastName:"Kopping"}, 200)
-        service.getUsersLike({firstName:"Danny", lastName:"Kopping"}, undefined)
-                .callback(this.success, this.failure)
-                .execute();
+//                .callback(this.success, this.failure)
+//                .execute();
+
+        var store = Ext.getStore("Users");
+        store.getUsersLike({firstName:"Danny", lastName:"Kopping"}, 200);
     },
 
-    success: function(response) {
+    success: function(response)
+    {
 //        console.log("getUsersLike Response: ", response);
 
         var store = Ext.getStore("Users");
         store.loadData(response);
     },
 
-    failure: function(response) {
+    failure: function(response)
+    {
         console.log("getUsersLike Failure: ", response);
     }
 

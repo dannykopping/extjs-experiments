@@ -35,7 +35,13 @@ Ext.define('AM.controller.Users', {
             record = form.getRecord(),
             values = form.getValues();
 
+        console.log(record);
+
         record.set(values);
+
+        console.log(record);
+        console.log(record.data.id, record.getChanges());
+
         win.close();
     },
 

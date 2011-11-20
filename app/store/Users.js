@@ -2,10 +2,9 @@ Ext.define('AM.store.Users', {
     extend: 'Ext.data.Store',
     model: 'AM.model.User',
     storeId: "userStore",
-    requires: ["AM.proxy.AerialProxy"],
 
     proxy: {
-        type: 'aerial',
+        type: 'userService',
 
         api: {
             read: 'http://localhost/play/helloext/aerial/server/server.php',
@@ -18,35 +17,27 @@ Ext.define('AM.store.Users', {
         }
     },
 
-    getUsersLike: function(options)
-    {
-        var proxy = this.getProxy();
-
-        proxy.service = "UserService";
-        proxy.method = "getUsersLike";
-
-        var paramArgs = [];
-        for(var x = 1; x < arguments.length; x++)
-            paramArgs.push(arguments[x]);
-
-        proxy.parameters = proxy.encodeParameters(paramArgs);
-
-        this.load(options);
+    load: function() {
+        this.callParent(arguments);
     },
 
-    saveAerialObj: function(options)
+    getUsersLike: function()
     {
         var proxy = this.getProxy();
-
-        proxy.service = "FilterService";
-        proxy.method = "save";
+        proxy.store = this;
 
         var paramArgs = [];
         for(var x = 1; x < arguments.length; x++)
             paramArgs.push(arguments[x]);
 
-        proxy.parameters = proxy.encodeParameters(paramArgs);
+        proxy.params = paramArgs;
 
-        this.load(options);
+        console.log(arguments);
+        proxy.getUsersLike(arguments[0], arguments[1])
+                .callback(function(){console.log("success", arguments)},
+                            function(){console.log("success", arguments)})
+                .execute();
+
+        this.load();
     }
 });

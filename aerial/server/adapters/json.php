@@ -14,7 +14,7 @@
 
     $service = $args[0];
     $method = $args[1];
-    $data = $GLOBALS['HTTP_RAW_POST_DATA'];
+    $data = file_get_contents('php://input') ? file_get_contents('php://input') : @$_GET["data"];
     $data = parseRequest(json_decode($data, true));
 
     $servicesPath = ConfigXml::getInstance()->servicesPath;

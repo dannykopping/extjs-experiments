@@ -20,8 +20,6 @@
 				$criterion = new FilterCriterion();
 				$data = new FilterData();
 
-                die("HI");
-
 				// remove existing criteria
 				$existing = $criterion->table->findBy("filterId", $object["id"]);
 				foreach($existing as $cr)
