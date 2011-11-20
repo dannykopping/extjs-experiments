@@ -1,0 +1,16 @@
+<project-options>
+  <aerial>
+    <version>1.0beta</version>
+  </aerial>
+  <project>
+    <name>New Aerial Project</name>
+    <config-path>/Applications/XAMPP/xamppfiles/htdocs/play/helloext/aerial/config/config.xml</config-path>
+    <as3-source-path/>
+    <php-source-path>/Applications/XAMPP/xamppfiles/htdocs/play/helloext/com/dannykopping/php/</php-source-path>
+  </project>
+  <code-generation>
+    <package>com.dannykopping.php</package>
+    <vo-suffix>VO</vo-suffix>
+    <service-suffix>Service</service-suffix>
+  </code-generation>
+</project-options>

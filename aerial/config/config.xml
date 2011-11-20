@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<!--
+		If you're in a team environment and want to use your own config file,
+		create one in this directory called "config-alt.xml" and override the values
+		you need to. Take care not to add this file to your source-control system.
+	-->
+
+	<paths>
+        <php-models>/Applications/XAMPP/htdocs/play/helloext/com/dannykopping/php/vo</php-models>
+        <php-services>/Applications/XAMPP/htdocs/play/helloext/com/dannykopping/php/services</php-services>
+	</paths>
+
+    <!-- general options -->
+
+	<options>
+		<debug-mode expose="true">true</debug-mode>
+		<server-url expose="true">http://localhost/play/helloext/aerial/server/server.php</server-url>
+        <use-encryption expose="true">false</use-encryption>
+
+        <collection-class>flex.messaging.io.ArrayCollection</collection-class>
+
+		<use-authentication>false</use-authentication>
+		<timezone>UTC</timezone>
+	</options>
+
+    <!-- database options -->
+
+    <database>
+        <engine>mysql</engine>
+        <host>localhost</host>
+        <schema>ajaxtest</schema>
+        <username>root</username>
+        <password>mac150189</password>
+        <port>3306</port>
+    </database>
+
+    <!-- authentication options -->
+
+    <!-- default-rule = if the service/function doesn't appear in the list, apply this rule -->
+    <!-- list-rule = if the service/function appears in the list, apply this rule -->
+
+    <authentication>
+        <groups>
+            <group name="General" role="safe">
+            </group>
+        </groups>
+
+        <roles>
+            <role name="safe" default-rule="deny" list-rule="allow">
+            </role>
+        </roles>
+    </authentication>
+</config>

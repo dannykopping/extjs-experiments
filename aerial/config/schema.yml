@@ -1,0 +1,886 @@
+---
+detect_relations: true
+options:
+  collate: utf8_unicode_ci
+  charset: utf8
+  type: InnoDB
+
+User:
+  actAs: [Timestampable]
+  tableName: User
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      unsigned: true
+      notnull: true
+      autoincrement: true
+    firstName:
+      type: string(512)
+      notnull: true
+    lastName:
+      type: string(512)
+      notnull: true
+    email:
+      type: string(255)
+      unique: true
+      notnull: true
+    password:
+      type: string(40)
+      notnull: true
+    type:
+      type: enum
+      values: ['Jobseeker','Recruiter/Employer','Sub-User']
+      notnull: true
+      default: 'Jobseeker'
+    active:
+      type: boolean
+      default: 1
+    verified:
+      type: boolean
+      default: 0
+    accountVerificationCodeId:
+      type: integer(4)
+      default: null
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    AccountVerificationCode:
+      class: AccountVerificationCode
+      local: accountVerificationCodeId
+      foreign: id
+      foreignAlias: users
+    shortlists:
+       local: userId
+       foreign: shortlistId
+       foreignAlias: users
+       class: Shortlist
+       refClass: ShortlistUser
+  indexes:
+    fk_User_AccountVerificationCode1:
+      fields: [accountVerificationCodeId]
+  options:
+    charset: utf8
+    collate: utf8_unicode_ci
+
+Metrics:
+  actAs: [Timestampable]
+  tableName: Metrics
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      unsigned: true
+      notnull: true
+      autoincrement: true
+    userCount:
+      type: integer(4)
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+
+InputLookup:
+  tableName: InputLookup
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    value:
+      type: clob(65535)
+      notnull: true
+
+GeographicInfo:
+  tableName: GeographicInfo
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    country:
+      type: string(2)
+      notnull: true
+    language:
+      type: string(2)
+      notnull: true
+    iso2:
+      type: string(6)
+      notnull: true
+    region1:
+      type: string(60)
+      notnull: true
+    region2:
+      type: string(60)
+      notnull: true
+    region3:
+      type: string(60)
+      notnull: true
+    region4:
+      type: string(60)
+      notnull: true
+    zip:
+      type: string(10)
+      notnull: true
+    city:
+      type: string(60)
+      notnull: true
+    area1:
+      type: string(80)
+      notnull: true
+    area2:
+      type: string(80)
+      notnull: true
+    lat:
+      type: double
+    lng:
+      type: double
+    tz:
+      type: string(30)
+      notnull: true
+    utc:
+      type: string(10)
+      notnull: true
+    dst:
+      type: string(1)
+      notnull: true
+
+AccountVerificationCode:
+  actAs: [Timestampable]
+  tableName: AccountVerificationCode
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    code:
+      type: string(40)
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+
+Profession:
+  tableName: Profession
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(1024)
+      notnull: true
+    category:
+      type: string(1024)
+  indexes:
+    name:
+      fields: [name]
+      type: fulltext
+  options:
+    charset: utf8
+    collate: utf8_unicode_ci
+    type: MyISAM
+
+FilterCriterion:
+  actAs: [Timestampable]
+  tableName: FilterCriterion
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    weight:
+      type: float
+      notnull: true
+      default: 0
+    name:
+      type: string(100)
+      notnull: true
+    filterId:
+      type: integer(4)
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    Filter:
+      class: Filter
+      local: filterId
+      foreign: id
+      foreignAlias: filterCriterions
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_FilterCriterion_Filter1:
+      fields: [filterId]
+
+FilterData:
+  actAs: [Timestampable]
+  tableName: FilterData
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    value:
+      type: clob(65535)
+    lookupId:
+      type: integer(4)
+    lookupClass:
+      type: string(100)
+    filterCriterionId:
+      type: integer(4)
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    FilterCriterion:
+      class: FilterCriterion
+      local: filterCriterionId
+      foreign: id
+      foreignAlias: filterDatas
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_FilterData_FilterCriterion1:
+      fields: [filterCriterionId]
+
+Filter:
+  actAs: [Timestampable]
+  tableName: Filter
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(100)
+      notnull: true
+    active:
+      type: boolean
+      default: 1
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: filters
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_Filter_User1:
+      fields: [userId]
+
+UserInformation:
+  actAs: [Timestampable]
+  tableName: UserInformation
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    type:
+      type: string(100)
+    value:
+      type: clob(65535)
+    lookupId:
+      type: integer(4)
+    lookupClass:
+      type: string(100)
+    completed:
+      type: boolean
+      default: 0
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: userInformations
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_UserInformation_User1:
+      fields: [userId]
+
+FilterUserMatch:
+  actAs: [Timestampable]
+  tableName: FilterUserMatch
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    percentage:
+      type: double
+      notnull: true
+    filterId:
+      type: integer(4)
+      notnull: true
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    Filter:
+      class: Filter
+      local: filterId
+      foreign: id
+      foreignAlias: filterUserMatches
+      onDelete: cascade
+      onUpdate: cascade
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: filterUserMatches
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_Match_Filter1:
+      fields: [filterId]
+    fk_Match_User1:
+      fields: [userId]
+    filterId_UNIQUE:
+      fields:
+        filterId:
+          sorting: ASC
+        userId:
+          sorting: ASC
+      type: unique
+
+FilterUserDataMatch:
+  tableName: FilterUserDataMatch
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(255)
+    possibleScore:
+      type: double
+    achievedScore:
+      type: double
+    filterDataId:
+      type: integer(4)
+      notnull: true
+    filterUserMatchId:
+      type: integer(4)
+      notnull: true
+  relations:
+    FilterData:
+      class: FilterData
+      local: filterDataId
+      foreign: id
+      foreignAlias: filterUserDataMatches
+      onDelete: cascade
+      onUpdate: cascade
+    FilterUserMatch:
+      class: FilterUserMatch
+      local: filterUserMatchId
+      foreign: id
+      foreignAlias: filterUserDataMatches
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_FilterUserDataMatch_FilterData1:
+      fields: [filterDataId]
+    fk_FilterUserDataMatch_FilterUserMatch1:
+      fields: [filterUserMatchId]
+
+ExternalAccount:
+  tableName: ExternalAccount
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    type:
+      type: string(255)
+      notnull: true
+    accessId:
+      type: string(255)
+      notnull: true
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+  relations:
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: externalAccounts
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_ExternalAccount_User1:
+      fields: [userId]
+
+Video:
+  actAs: [Timestampable]
+  tableName: Video
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    videoName:
+      type: string(500)
+      notnull: true
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: video
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_Video_User1:
+      fields: [userId]
+
+FinancialTransaction:
+  actAs: [Timestampable]
+  tableName: FinancialTransaction
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    amount:
+      type: double
+    numCredits:
+      type: integer(4)
+    bank:
+      type: string(100)
+      notnull: true
+    reference:
+      type: string(16)
+      unique: true
+      notnull: true
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: financialTransactions
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_FinancialTransaction_User1:
+      fields: [userId]
+
+BillingHistory:
+  actAs: [Timestampable]
+  tableName: BillingHistory
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    type:
+      type: enum
+      values: ['payment', 'purchase', 'credit', 'reversal', 'cancelled']
+      notnull: true
+    numCredits:
+      type: integer(4)
+      notnull: true
+    comment:
+      type: clob(65535)
+    financialTransactionId:
+      type: integer(4)
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: billingHistories
+      onDelete: cascade
+      onUpdate: cascade
+    FinancialTransaction:
+      class: FinancialTransaction
+      local: financialTransactionId
+      foreign: id
+      foreignAlias: billingHistories
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_BillingHistory_User1:
+      fields: [userId]
+    fk_BillingHistory_FinancialTransaction1:
+      fields: [financialTransactionId]
+
+Credit:
+  actAs: [Timestampable]
+  tableName: Credit
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    numCredits:
+      type: integer(4)
+      notnull: true
+    financialTransactionId:
+      type: integer(4)
+      unique: true
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    FinancialTransaction:
+      class: FinancialTransaction
+      local: financialTransactionId
+      foreign: id
+      foreignAlias: credits
+      onDelete: cascade
+      onUpdate: cascade
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: credits
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_Credit_FinancialTransaction1:
+      fields: [financialTransactionId]
+    fk_Credit_User1:
+      fields: [userId]
+
+Purchase:
+  actAs: [Timestampable]
+  tableName: Purchase
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    purchasedUserId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+    filterId:
+      type: integer(4)
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    PurchasedUser:
+      class: User
+      local: purchasedUserId
+      foreign: id
+      foreignAlias: purchases
+      onDelete: cascade
+      onUpdate: cascade
+    Filter:
+      class: Filter
+      local: filterId
+      foreign: id
+      foreignAlias: purchases
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_Purchase_User1:
+      fields: [purchasedUserId]
+    fk_Purchase_Filter1:
+      fields: [filterId]
+    purchasedUserId_UNIQUE:
+      fields:
+        purchasedUserId:
+          sorting: ASC
+        filterId:
+          sorting: ASC
+      type: unique
+
+ProfileView:
+  actAs: [Timestampable]
+  tableName: ProfileView
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    count:
+      type: integer(4)
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+    filterId:
+      type: integer(4)
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: profileViews
+      onDelete: cascade
+      onUpdate: cascade
+    Filter:
+      class: Filter
+      local: filterId
+      foreign: id
+      foreignAlias: profileViews
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_ProfileView_User1:
+      fields: [userId]
+    fk_ProfileView_Filter1:
+      fields: [filterId]
+
+Preference:
+  tableName: Preference
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    type:
+      type: string(255)
+    value:
+      type: clob(65535)
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+  relations:
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: preferences
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_Preference_User1:
+      fields: [userId]
+    type_UNIQUE:
+      fields:
+        type:
+          sorting: ASC
+        userId:
+          sorting: ASC
+      type: unique
+
+Document:
+  actAs: [Timestampable]
+  tableName: Document
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    type:
+      type: enum
+      values: ['résumé']
+      notnull: true
+    content:
+      type: blob
+      notnull: true
+    filename:
+      type: string(512)
+      notnull: true
+      default: 'document.docx'
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+  relations:
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: documents
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_Document_User1:
+      fields: [userId]
+
+WaitingList:
+  actAs: [Timestampable]
+  tableName: WaitingList
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    email:
+      type: string(255)
+      unique: true
+      notnull: true
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+
+Shortlist:
+  actAs: [Timestampable]
+  tableName: Shortlist
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(255)
+    createdAt:
+      type: timestamp
+    updatedAt:
+      type: timestamp
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+  relations:
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: shortlists
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_Shortlist_User1:
+      fields: [userId]
+    name_UNIQUE:
+      fields:
+        name:
+          sorting: ASC
+        userId:
+          sorting: ASC
+      type: unique
+
+ShortlistUser:
+  tableName: ShortlistUser
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    shortlistId:
+      type: integer(4)
+      notnull: true
+    userId:
+      type: integer(4)
+      unsigned: true
+      notnull: true
+  relations:
+    Shortlist:
+      class: Shortlist
+      local: shortlistId
+      foreign: id
+      foreignAlias: shortlistUsers
+      onDelete: cascade
+      onUpdate: cascade
+    User:
+      class: User
+      local: userId
+      foreign: id
+      foreignAlias: shortlistUsers
+      onDelete: cascade
+      onUpdate: cascade
+  indexes:
+    fk_ShortlistUser_Shortlist1:
+      fields: [shortlistId]
+    fk_ShortlistUser_User1:
+      fields: [userId]
+    shortlistId_UNIQUE:
+      fields:
+        shortlistId:
+          sorting: ASC
+        userId:
+          sorting: ASC
+      type: unique
+

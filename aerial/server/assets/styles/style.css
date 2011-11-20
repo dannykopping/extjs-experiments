@@ -1,0 +1,31 @@
+body
+{
+    background: url("../images/logo.png") no-repeat bottom right fixed #000000;
+    /*background-position: bottom right;
+                     background-attachment: fixed;*/
+
+    font-family: Droid Sans, Tahoma, sans-serif;
+    color: #FFFFFF;
+    font-size: 12px;
+}
+
+h2
+{
+    font-size: 15px;
+    font-family: Droid Sans, Tahoma, sans-serif;
+}
+
+a:link, a:visited, a:active { color:#FFFFFF; text-decoration: none; font-weight: bold }
+a:hover { color:#C7E811 }
+
+.warning {border:2px #ffaa11 solid; margin-bottom:10px;}
+.warning h2 {background: #ffaa11; color:#000; padding:8px;margin-top:0px;}
+.warning p {color:#ffaa11;font-size: 13px; padding-left:5px; padding-right:5px}
+
+.error {border:2px #ff2222 solid; margin-bottom:10px;}
+.error h2 {background: #ff2222; color:#000; padding:8px;margin-top:0px;}
+.error p {color:#ff2222;font-size: 13px; padding-left:5px; padding-right:5px}
+
+.success {border:2px #77dd00 solid; margin-bottom:10px;}
+.success h2 {background: #77dd00; color:#000; padding:8px;margin-top:0px;}
+.success p {color:#77dd00;font-size: 13px; padding-left:5px; padding-right:5px}
