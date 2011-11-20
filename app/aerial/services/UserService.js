@@ -1,6 +1,5 @@
 Ext.define('AM.aerial.services.UserService', {
     extend: 'Ext.data.Connection',
-    requires: ["AM.proxy.AerialProxy"],
     alias: "UserService",
 
     url: "http://localhost/play/helloext/aerial/server/server.php/json/UserService",
@@ -15,7 +14,7 @@ Ext.define('AM.aerial.services.UserService', {
 
         var me = this;
         me.methodToCall = "getUsersLike";
-        me.params = [userDetails, userId];
+        me.params = Ext.AerialJSON.encode([userDetails, userId]);
 
         me.addListener("requestcomplete", me.requestCompleteHandler, this);
         me.addListener("requestexception", me.requestFaultHandler, this);
@@ -86,26 +85,17 @@ Ext.define('AM.aerial.services.UserService', {
         var me = this;
 
         me.request({url:me.url + "/" + me.methodToCall, jsonData:me.params});
+    },
+
+    getApplicationNamespace: function() {
+
+        var paths = Ext.Loader.getConfig()["paths"];
+        for(var path in paths)
+            if(path !== "Ext")
+                return path;
+
+        return null;
+
     }
 
 });
-
-    /*
-        var conn = new Ext.data.Connection();
-        conn.request({url:"http://localhost/play/helloext/aerial/server/server.php/json/UserService/getUsersLike",
-                        jsonData:[{firstName:"Danny", lastName:"Kopping"}, 200]});
-
-        conn.addListener("requestcomplete", function(request, response, options)
-            {
-                var reader = new Ext.data.JsonReader({
-                    model:"AM.model.User"
-                });
-
-                var store = Ext.getStore("Users");
-                var read = reader.read(response);
-
-                store.loadData(read.records);
-
-                console.log(response.responseText);
-                console.log(read.records);
-            }, this);*/

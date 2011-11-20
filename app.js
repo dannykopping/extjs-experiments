@@ -23,13 +23,14 @@ Ext.application({
         });
 
         var service = new Ext.create("UserService");
-        service.getUsersLike({firstName:"Danny", lastName:"Kopping"}, 200)
+//        service.getUsersLike({firstName:"Danny", lastName:"Kopping"}, 200)
+        service.getUsersLike({firstName:"Danny", lastName:"Kopping"}, undefined)
                 .callback(this.success, this.failure)
                 .execute();
     },
 
     success: function(response) {
-        console.log("getUsersLike Response: ", response);
+//        console.log("getUsersLike Response: ", response);
 
         var store = Ext.getStore("Users");
         store.loadData(response);
