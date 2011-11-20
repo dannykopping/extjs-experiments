@@ -18,6 +18,7 @@ Ext.define('AM.aerial.services.UserService', {
         me.params = [userDetails, userId];
 
         me.addListener("requestcomplete", me.requestCompleteHandler, this);
+        me.addListener("requestexception", me.requestFaultHandler, this);
 
         return me;
     },
@@ -30,7 +31,17 @@ Ext.define('AM.aerial.services.UserService', {
             model:"AM.model.User"
         });
 
-        var read = reader.read(response);
+        try
+        {
+            var read = reader.read(response);
+        }
+        catch(e)
+        {
+            if(me.failureCallback) {
+                me.failureCallback.apply(me, [e]);
+                return;
+            }
+        }
 
         if(read.records.length == 1) {
             var record = read.records[0];
@@ -48,6 +59,15 @@ Ext.define('AM.aerial.services.UserService', {
 
         if(me.successCallback)
             me.successCallback.apply(me, [read.records]);
+
+    },
+
+    requestFaultHandler: function(request, response, options)
+    {
+        var me = this;
+
+        if(me.failureCallback)
+            me.failureCallback.apply(me, [response]);
 
     },
 

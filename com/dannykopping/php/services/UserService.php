@@ -174,8 +174,6 @@
                     ->orWhere("u.lastName LIKE '%".$search["lastName"]."%'")
                     ->orWhere("u.id = $id");
 
-            throw new Exception("Bob");
-
             $query->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY);
             return $query->execute();
         }
