@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <!-- relative or absolute reference to config directory or parent of config directory -->
+    <location>../config</location>
+    <base>../</base>
+</project>
