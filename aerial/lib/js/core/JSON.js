@@ -42,9 +42,12 @@ Ext.AerialJSON = new(function() {
         return eval("(" + json + ')');
     },
     doEncode = function(o) {
-        if (!Ext.isDefined(o) || o === null) {
+        if (!Ext.isDefined(o)) {
             return encodeString("__undefined__");
-        } else if (Ext.isArray(o)) {
+        } else if (o === null) {
+            return "null";
+        }
+        else if (Ext.isArray(o)) {
             return encodeArray(o);
         } else if (Ext.isDate(o)) {
             return Ext.JSON.encodeDate(o);
