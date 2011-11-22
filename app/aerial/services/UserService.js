@@ -22,12 +22,15 @@ Ext.define('AM.aerial.services.UserService', {
     
     actionMethods: {
         create : 'POST',
-        read   : 'GET',
+        read   : 'POST',
         update : 'POST',
         destroy: 'POST'
     },
 
     constructor: function() {
+
+        this.reader = Ext.create("Ext.data.JsonReader");
+        this.reader.model = this.model;
 
         this.callParent(arguments);
 
@@ -60,24 +63,23 @@ Ext.define('AM.aerial.services.UserService', {
         return this.callParent(arguments);
     },
 
+    /**
+     * @param userDetails
+     * @param userId
+     */
     getUsersLike: function(userDetails, userId) {
 
         var me = this;
         me.method = "getUsersLike";
-
-        me.params = {};
         me.params = [userDetails, userId];
 
-        console.log("AE", me.params);
-
-        me.addListener("requestcomplete", me.requestCompleteHandler, this);
+        me.addListener("add", me.requestCompleteHandler, this);
         me.addListener("requestexception", me.requestFaultHandler, this);
 
         return me;
     },
 
-    requestCompleteHandler: function(request, response, options)
-    {
+    requestCompleteHandler: function(request, response, options) {
         var me = this;
 
         var reader = new Ext.data.JsonReader({
@@ -115,8 +117,7 @@ Ext.define('AM.aerial.services.UserService', {
 
     },
 
-    requestFaultHandler: function(request, response, options)
-    {
+    requestFaultHandler: function(request, response, options) {
         var me = this;
 
         if(me.failureCallback)
@@ -138,6 +139,7 @@ Ext.define('AM.aerial.services.UserService', {
 
         var me = this;
 
+        this.store.load(function(){console.log(arguments)});
         return me;
     },
 
@@ -145,14 +147,13 @@ Ext.define('AM.aerial.services.UserService', {
 
         operation.params = this.params;
 
-        console.log("READ!", operation.params);
-
         this.callParent(arguments);
 
     },
 
 
     doRequest: function(operation, callback, scope) {
+
         var writer  = Ext.create("AM.aerial.writer.AerialWriter"),
             request = this.buildRequest(operation, callback, scope);
 
@@ -165,12 +166,11 @@ Ext.define('AM.aerial.services.UserService', {
             timeout       : this.timeout,
             scope         : this,
             callback      : this.createRequestCallback(request, operation, callback, scope),
-            method        : "POST",
+            method        : this.getMethod(request),
             disableCaching: false // explicitly set it to false, ServerProxy handles caching
         });
 
         Ext.Ajax.request(request);
-        console.log(request);
 
         return request;
     },

@@ -24,6 +24,8 @@
     $serviceClass = new $service;
     $response = call_user_func_array(array($serviceClass, $method), $data);
 
+    throw new Exception("HI");
+
     echo json_encode(simplifyResponse($response));
 //    die();
 

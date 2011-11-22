@@ -15,29 +15,31 @@ Ext.define('AM.store.Users', {
             root: 'data',
             successProperty: 'success'
         }
+
+        // create a custom writer to determine errors!
+    },
+
+    constructor: function() {
+
+        var me = this;
+
+        var proxy = me.getProxy();
+        proxy.store = me;
+
+        this.callParent(arguments);
+
     },
 
     load: function() {
         this.callParent(arguments);
     },
 
-    getUsersLike: function()
-    {
-        var proxy = this.getProxy();
-        proxy.store = this;
+    getUsersLike: function(userDetails, userId) {
 
-        var paramArgs = [];
-        for(var x = 1; x < arguments.length; x++)
-            paramArgs.push(arguments[x]);
-
-        proxy.params = paramArgs;
-
-        console.log(arguments);
-        proxy.getUsersLike(arguments[0], arguments[1])
+        this.getProxy().getUsersLike(userDetails, userId)
                 .callback(function(){console.log("success", arguments)},
                             function(){console.log("success", arguments)})
                 .execute();
-
-        this.load();
+        
     }
 });
