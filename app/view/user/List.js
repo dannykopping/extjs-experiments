@@ -1,7 +1,7 @@
 Ext.define('AM.view.user.List', {
     extend: 'Ext.grid.Panel',
     alias : 'widget.userlist',
-    store : 'Users',
+//    store : 'Users',
 
     title : 'All Users',
 

@@ -1,6 +1,6 @@
 Ext.application({
     name: 'AM',
-    requires: ["AM.aerial.services.UserService"],
+    requires: ["aerialext.services.UserService"],
 
     appFolder: 'app',
 
@@ -14,29 +14,35 @@ Ext.application({
             layout: 'fit',
             items: [
                 {
-                    layout: "fit",
-                    items: {
-                        xtype: "userlist"
-                    }
+                    layout: {
+                        type: 'vbox',
+                        align : 'stretch',
+                        pack  : 'start'
+                    },
+                    items: [
+                        {xtype: "userlist", id: "userlist1"},
+                        {xtype: "userlist", id: "userlist2"}
+                    ]
                 }
             ]
         });
 
-//        var service = new Ext.create("UserService");
-//        service.getUsersLike({firstName:"Danny", lastName:"Kopping"}, 200)
-//                .callback(this.success, this.failure)
-//                .execute();
-
-        var store = Ext.getStore("Users");
-        store.getUsersLike({firstName:"Danny", lastName:"Kopping"}, 200);
+        var service = Ext.create("Aerial.UserService");
+        service.getUsersLike({firstName:"Dane", lastName:"Ings"}, 200)
+                .callback(this.success, this.failure)
+                .execute();
     },
 
     success: function(response)
     {
-//        console.log("getUsersLike Response: ", response);
+        var list = Ext.getCmp("userlist1");
 
         var store = Ext.getStore("Users");
+        list.bindStore(store);
+
         store.loadData(response);
+
+        list.fireEvent("datachanged", this);
     },
 
     failure: function(response)

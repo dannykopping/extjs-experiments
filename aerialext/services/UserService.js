@@ -1,4 +1,4 @@
-Ext.define('AM.aerial.services.UserService', {
+Ext.define('aerialext.services.UserService', {
     extend: 'Ext.data.Connection',
     alias: "Aerial.UserService",
 

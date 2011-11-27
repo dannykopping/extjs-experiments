@@ -4,7 +4,7 @@ Ext.define('AM.store.Users', {
     storeId: "userStore",
 
     proxy: {
-        type: 'userService',
+        type: 'ajax',
 
         api: {
             read: 'http://localhost/play/helloext/aerial/server/server.php',
